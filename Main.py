@@ -47,7 +47,6 @@ def DeviceType(deviceName):
         return "Switch"
     else:
         return "Router"
-    
 
 
 
