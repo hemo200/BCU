@@ -49,7 +49,7 @@ def DeviceType(deviceName):
         return "Router"
 def ConfigureInterface(deviceInterface):
     print("Configure Interface")
-    print("Interface Configured")
+    print("Accomplished")
 
 
 dic_Devices_list= {}
