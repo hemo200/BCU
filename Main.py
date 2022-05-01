@@ -47,7 +47,8 @@ def DeviceType(deviceName):
         return "Switch"
     else:
         return "Router"
-
+def ConfigureInterface(deviceInterface):
+    print("Configure Interface")
 
 
 dic_Devices_list= {}
