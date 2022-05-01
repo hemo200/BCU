@@ -47,9 +47,10 @@ def DeviceType(deviceName):
         return "Switch"
     else:
         return "Router"
-def ConfigureInterface(deviceInterface):
-    print("Configure Interface")
-    print("Accomplished")
+#This function will assign VLANS to the interface and will assign them as trunk or access
+def ConfigureInterface(deviceName):
+    with open ("", mode="r") as device:
+        print()
 
 
 dic_Devices_list= {}
