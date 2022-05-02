@@ -52,7 +52,8 @@ def ConfigureInterface(deviceInstance):
     lis_trunked_interface = []
     with open (("./bcu/"+ deviceInstance[0] +"/trunk.txt"), mode="r") as interfaceName:
         lis_trunked_interface = interfaceName.readlines()
-    print (lis_trunked_interface)
+    for interface in lis_trunked_interface:
+        print(interface)
 
 
 
