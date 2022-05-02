@@ -50,12 +50,12 @@ def DeviceType(deviceName):
 #This function will assign VLANS to the interface and will assign them as trunk or access
 def ConfigureInterface(deviceInstance):
     lis_trunked_interface = []
-    with open (("./bcu/"+ deviceInstance[0] +"/trunk.txt"), mode="r") as interfaceName:
-        lis_trunked_interface = interfaceName.readlines()
-    for interface in lis_trunked_interface:
-        print(interface)
-
-
+    with open (("./bcu/"+ deviceInstance[0] +"/trunk.csv"), mode="r") as interfaceName:
+        reader = csv.reader(interfaceName)
+        for item in reader:
+            lis_trunked_interface.append(item[0])
+    for item in lis_trunked_interface:
+        print(item)
 
 dic_Devices_list= {}
 testResultFlag = True
@@ -96,11 +96,8 @@ for device in dic_Devices_list.items():
     else:
         print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])+ Fore.RESET)
 
-
 for device in dic_Devices_list.items():
-    ConfigureInterface(device)
-
-    
+    ConfigureInterface(device)    
 
 
 
