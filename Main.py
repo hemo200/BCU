@@ -6,13 +6,13 @@ from colorama import Fore
 
 
 def loadDevices(deviceCSV):
-    with open (deviceCSV, mode="r") as device:
+    with open (("./bcu/" + deviceCSV), mode="r") as device:
         reader = csv.reader(device)
         dic_device = {device[0]:device[1] for device in reader}
     return dic_device
 def loadVlans(deviceName):
     if ( deviceName[3:5] == "SW"):
-        with open ("./"+deviceName +"/VLAN.csv", mode='r') as vlan:
+        with open ("./bcu/"+deviceName +"/VLAN.csv", mode="r") as vlan:
             reader = csv.reader(vlan)
             dic_vlan = {vlan[1]:vlan[0] for vlan in reader}
         return dic_vlan
@@ -49,9 +49,11 @@ def DeviceType(deviceName):
         return "Router"
 #This function will assign VLANS to the interface and will assign them as trunk or access
 def ConfigureInterface(deviceName):
-    with open (("./" + deviceName[0] +"trunk.csv"), mode="r") as interface:
-        reader = reader.csv(interface)
-        lis_interface = {lis_interface.append(reader) for device in reader}
+    lis_trunked_interface = []
+    with open (("./bcu/"+ deviceName +"/trunk.txt"), mode="r") as interfaceName:
+        lis_trunked_interface = interfaceName.readline()
+    for interface in lis_trunked_interface.items():
+        print(interface)
 
 
 
@@ -92,8 +94,11 @@ for device in dic_Devices_list.items():
     if (configureVLAN(dic_device_credentials,device) == True):#Confirmation from switch
         print("The Vlans are added to {}".format(device[0]))
     else:
-        print("Vlans cannot be added to {0} or {0} is not a switch".format(device[0]))
+        print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])+ Fore.RESET)
 
+
+for device in dic_Devices_list.items():
+    ConfigureInterface(device)
 
     
 
