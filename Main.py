@@ -51,18 +51,30 @@ def DeviceType(deviceName):
 def ConfigureInterface(deviceInstance, connectionInstance):
     lis_trunked_interface = []
     lis_vlan_list = []
+    connectionInstance["host"] = deviceInstance[1]
     lis_vlan_list = loadVlans(deviceInstance[0])
+    
     with open (("./bcu/"+ deviceInstance[0] +"/trunk.csv"), mode="r") as interfaceName:
         reader = csv.reader(interfaceName)
+        config_commands = []
         for item in reader:
             lis_trunked_interface.append(item[0])
-
+        connection = ConnectHandler(**connectionInstance)
+        for interface in lis_trunked_interface:
+            config_commands[("interface "+ interface)]
+            vlanList = "switchport trunk allowed vlan add "
+            for vlanNum in lis_vlan_list:
+                vlanList = vlanList+ vlanNum + ","
+            config_commands.append(vlanList)
+            for item in config_commands:
+                print(item)
+            
 dic_Devices_list= {}
 testResultFlag = True
 mainMenuOption = 0    
 dic_Devices_list = loadDevices('list_of_device.csv')    
 
-dic_device_credentials = {
+dic_device_credentials = { 
     "device_type": "cisco_ios",
     "username" : "LocalAdmin",
     "password" : "Cisco123"
@@ -97,7 +109,7 @@ for device in dic_Devices_list.items():
         print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])+ Fore.RESET)
 
 for device in dic_Devices_list.items():
-    ConfigureInterface(device)    
+    ConfigureInterface(device,dic_device_credentials)    
 
 
 
