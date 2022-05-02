@@ -64,8 +64,8 @@ def ConfigureInterface(deviceInstance, connectionInstance):
             config_commands = ["interface "+ interface]
             vlanList = "switchport trunk allowed vlan add "
             for vlanNum in lis_vlan_list:
-                if vlanList == "" :
-                    vlanList = vlanNum
+                if vlanList == "switchport trunk allowed vlan add ":
+                    vlanList = vlanList + vlanNum
                 else:    
                     vlanList = vlanList+ "," + vlanNum
             config_commands.append(vlanList)
