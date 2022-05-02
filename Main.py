@@ -50,10 +50,9 @@ def DeviceType(deviceName):
 #This function will assign VLANS to the interface and will assign them as trunk or access
 def ConfigureInterface(deviceInstance):
     lis_trunked_interface = []
-    with open (("./bcu/"+ deviceInstance[0] +"/trunk.txt")) as interfaceName:
-        lis_trunked_interface.append(interfaceName.readline())
-    for interface in lis_trunked_interface:
-        print (interface)
+    with open (("./bcu/"+ deviceInstance[0] +"/trunk.txt"), mode="r") as interfaceName:
+        lis_trunked_interface = interfaceName.readlines()
+    print (lis_trunked_interface)
 
 
 
