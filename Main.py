@@ -61,7 +61,7 @@ def ConfigureInterface(deviceInstance, connectionInstance):
             lis_trunked_interface.append(item[0])
         connection = ConnectHandler(**connectionInstance)
         for interface in lis_trunked_interface:
-            config_commands[("interface "+ interface)]
+            config_commands = ["interface "+ interface]
             vlanList = "switchport trunk allowed vlan add "
             for vlanNum in lis_vlan_list:
                 vlanList = vlanList+ vlanNum + ","
