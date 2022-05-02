@@ -49,8 +49,10 @@ def DeviceType(deviceName):
         return "Router"
 #This function will assign VLANS to the interface and will assign them as trunk or access
 def ConfigureInterface(deviceName):
-    with open ("", mode="r") as device:
-        print()
+    with open (("./" + deviceName[0] +"trunk.csv"), mode="r") as interface:
+        reader = reader.csv(interface)
+        lis_interface = {lis_interface.append(reader) for device in reader}
+
 
 
 dic_Devices_list= {}
