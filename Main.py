@@ -59,18 +59,21 @@ def ConfigureInterface(deviceInstance, connectionInstance):
         config_commands = []
         for item in reader:
             lis_trunked_interface.append(item[0])
-        connection = ConnectHandler(**connectionInstance)
-        for interface in lis_trunked_interface:
-            config_commands = ["interface "+ interface]
-            vlanList = "switchport trunk allowed vlan add "
-            for vlanNum in lis_vlan_list:
-                if vlanList == "switchport trunk allowed vlan add ":
-                    vlanList = vlanList + vlanNum
-                else:    
-                    vlanList = vlanList+ "," + vlanNum
-            config_commands.append(vlanList)
-            for item in config_commands:
-                print(item)
+    connection = ConnectHandler(**connectionInstance)
+    for interface in lis_trunked_interface:
+        config_commands.append("interface "+ interface)
+        vlanList = "switchport trunk allowed vlan add "
+        for vlanNum in lis_vlan_list:
+            if vlanList == "switchport trunk allowed vlan add ":
+                vlanList = vlanList + vlanNum
+            else:    
+                vlanList = vlanList+ "," + vlanNum
+        config_commands.append(vlanList)
+    for item in config_commands:
+        print(item)
+    connection.send_config_set(config_commands)
+
+            
             
 dic_Devices_list= {}
 testResultFlag = True
