@@ -53,26 +53,28 @@ def ConfigureInterface(deviceInstance, connectionInstance):
     lis_vlan_list = []
     connectionInstance["host"] = deviceInstance[1]
     lis_vlan_list = loadVlans(deviceInstance[0])
-    
-    with open (("./bcu/"+ deviceInstance[0] +"/trunk.csv"), mode="r") as interfaceName:
-        reader = csv.reader(interfaceName)
-        config_commands = []
-        for item in reader:
-            lis_trunked_interface.append(item[0])
-    connection = ConnectHandler(**connectionInstance)
-    for interface in lis_trunked_interface:
-        config_commands.append("interface "+ interface)
-        vlanList = "switchport trunk allowed vlan add "
-        for vlanNum in lis_vlan_list:
-            if vlanList == "switchport trunk allowed vlan add ":
-                vlanList = vlanList + vlanNum
-            else:    
-                vlanList = vlanList+ "," + vlanNum
-        config_commands.append(vlanList)
-    for item in config_commands:
-        print(item)
-    connection.send_config_set(config_commands)
+    try:
+        with open (("./bcu/"+ deviceInstance[0] +"/trunk.csv"), mode="r") as interfaceName:
+            reader = csv.reader(interfaceName)
+            config_commands = []
+            for item in reader:
+                lis_trunked_interface.append(item[0])
+        connection = ConnectHandler(**connectionInstance)
+        for interface in lis_trunked_interface:
+            config_commands.append("interface "+ interface)
+            vlanList = "switchport trunk allowed vlan add "
+            for vlanNum in lis_vlan_list:
+                if vlanList == "switchport trunk allowed vlan add ":
+                    vlanList = vlanList + vlanNum
+                else:    
+                    vlanList = vlanList+ "," + vlanNum
+            config_commands.append(vlanList)
 
+        connection.send_config_set(config_commands)
+        print("VLANs are added to trunk ports.")
+        connection.disconnect()
+    except:
+        print(Fore.RED + "Error loading trunk.csv file" + Fore.RESET)
             
             
 dic_Devices_list= {}
