@@ -43,7 +43,7 @@ def ConnectionTester(device,ConnectionParameters):
             return False
         connection.disconnect()    
     except:
-        print(fore.RED+"The device {} is not reachable".format(device[1])+Fore.RESET)
+        print(Fore.RED+"The device {} is not reachable".format(device[1])+Fore.RESET)
         return False 
 def DeviceType(deviceName):
     deviceAcron = deviceName[3:5]
@@ -75,7 +75,7 @@ def ConfigureInterface(deviceInstance, connectionInstance):
             config_commands.append(vlanList)
 
         connection.send_config_set(config_commands)
-        print("VLANs are added to trunk ports.")
+        print("VLANs are added to trunk ports in {0}".format(device[1]))
         connection.disconnect()
     except:
         print(Fore.RED + "Error loading trunk.csv file" + Fore.RESET)
