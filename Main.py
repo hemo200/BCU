@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 from netmiko import ConnectHandler
 import csv
 import colorama
@@ -11,13 +12,14 @@ def loadDevices(deviceCSV):
         dic_device = {device[0]:device[1] for device in reader}
     return dic_device
 def loadVlans(deviceName):
-    if ( deviceName[3:5] == "SW"):
+    if (deviceName[3:5] == "SW"):
         with open ("./bcu/"+deviceName +"/VLAN.csv", mode="r") as vlan:
             reader = csv.reader(vlan)
             dic_vlan = {vlan[1]:vlan[0] for vlan in reader}
         return dic_vlan
     else:
         print("{} is not a switch".format(deviceName))
+
 def configureVLAN(Connection,deviceInstance):
     dicVlanList = []
     if (DeviceType(deviceInstance[0]) == "Switch"):
@@ -79,8 +81,11 @@ def ConfigureInterface(deviceInstance, connectionInstance):
         connection.disconnect()
     except:
         print(Fore.RED + "Error loading trunk.csv file" + Fore.RESET)
-            
-            
+
+def ConfigureNTP (deviceInstance,connectionInstance):
+    connectionInstance["host"] = deviceInstance[1]
+    
+    print("NTP is configured")                        
 dic_Devices_list= {}
 testResultFlag = True
 mainMenuOption = 0    
@@ -110,7 +115,8 @@ for device in dic_Devices_list.items():
 if (testResultFlag == True):
     print(Fore.GREEN+"All devices are reachable and configureable"+Fore.RESET)
 else:
-    print(Fore.RED+"One of more devices are not reachable and configureable. Please check the above"+
+    print(Fore.RED+
+    "One of more devices are not reachable and configureable. Please check the above"+
     " error messages."+Fore.RESET)
 #Configuring VLAN on all switches
 print("Configuring vlans on switches:")
@@ -118,7 +124,8 @@ for device in dic_Devices_list.items():
     if (configureVLAN(dic_device_credentials,device) == True):#Confirmation from switch
         print("The Vlans are added to {}".format(device[0]))
     else:
-        print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])+ Fore.RESET)
+        print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])
+        + Fore.RESET)
 
 for device in dic_Devices_list.items():
     ConfigureInterface(device,dic_device_credentials)    
