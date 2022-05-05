@@ -32,15 +32,19 @@ def configureVLAN(Connection,deviceInstance):
     else:
         return False
 def ConnectionTester(device,ConnectionParameters):
-    ConnectionParameters["host"] = device[1]
-    print("testing {}".format(ConnectionParameters["host"]))
-    connection = ConnectHandler(**ConnectionParameters)
-    if (connection.find_prompt() == (device[0]+"#")):
-        return True
-    else:
-        print(Fore.RED+"The device is not configureable"+Fore.RESET)
-        return False
-    connection.disconnect()    
+    try:
+        ConnectionParameters["host"] = device[1]
+        print("testing {}".format(ConnectionParameters["host"]))
+        connection = ConnectHandler(**ConnectionParameters)
+        if (connection.find_prompt() == (device[0]+"#")):
+            return True
+        else:
+            print(Fore.RED+"The device is not configureable"+Fore.RESET)
+            return False
+        connection.disconnect()    
+    except:
+        print(fore.RED+"The device {} is not reachable".format(device[1])+Fore.RESET)
+        return False 
 def DeviceType(deviceName):
     deviceAcron = deviceName[3:5]
     if (deviceAcron == "SW"):
