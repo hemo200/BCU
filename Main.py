@@ -86,6 +86,14 @@ def ConfigureNTP (deviceInstance,connectionInstance):
     connectionInstance["host"] = deviceInstance[1]
     
     print("NTP is configured")                        
+
+def SetVlanInterface (deviceInstance,connectionInstance):
+    connectionInstance["host"] = deviceInstance[1]
+
+    if (DeviceType(deviceInstance[0]) == "Router"):
+        dic_router_vlan = loadVlans(deviceInstance[0])
+        print()
+
 dic_Devices_list= {}
 testResultFlag = True
 mainMenuOption = 0    

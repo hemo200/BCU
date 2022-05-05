@@ -1,0 +1,8 @@
+StuComp,101
+StaffComp,102
+AdminComp,103
+StudPeri,111
+StaffPeri,112
+AdminPeri,113
+WiFiAPs,120
+IPTel,130
