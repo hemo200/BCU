@@ -1,4 +1,5 @@
 #!usr/bin/env python
+"""
 import csv
 from netmiko import ConnectHandler
 dic_vlan = []
@@ -27,5 +28,6 @@ for vlanNum, vlanName in dic_vlan.items():
     commands = [(" vlan " + vlanNum)]
     device_connection.send_config_set(commands)
 device_connection.disconnect()
-
-
+"""
+line = "203"
+print(line[1:3])

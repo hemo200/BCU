@@ -89,10 +89,35 @@ def ConfigureNTP (deviceInstance,connectionInstance):
 
 def SetVlanInterface (deviceInstance,connectionInstance):
     connectionInstance["host"] = deviceInstance[1]
-
+    connection = ConnectHandler(**connectionInstance)
     if (DeviceType(deviceInstance[0]) == "Router"):
-        dic_router_vlan = loadVlans(deviceInstance[0])
-        print()
+        dict_vlans = []
+        with open("./bcu/"+ deviceInstance[0][0:2] + ".csv") as vlanNum:
+            reader = csv.reader(vlanNum)
+            for item in reader:
+               dict_vlans.append(item[1]) 
+        print(deviceInstance[0][0:2])
+        InterfaceCommnadList = []
+        for vlnum in dict_vlans:
+            if deviceInstance[0][0:2] == "CS":
+                InterfaceCommnadList.append("interface Gi2." + vlnum)
+                
+            else:
+                InterfaceCommnadList.append("interface Gi1." + vlnum)
+            InterfaceCommnadList.append("encapsulation dot1Q " + vlnum)
+            if deviceInstance[0][0:2] == "CS":
+                InterfaceCommnadList.append("ip address 10.1."+ vlnum[1:3] + ".1 255.255.255.0")
+            elif deviceInstance[0][0:2] == "CC":
+                InterfaceCommnadList.append("ip address 10.2."+ vlnum[1:3] + ".1 255.255.255.0")
+            else:
+                InterfaceCommnadList.append("ip address 10.3."+ vlnum[1:3] + ".1 255.255.255.0")
+        for item in InterfaceCommnadList:
+            print(item)
+        connection.send_config_set(InterfaceCommnadList)
+        connection.disconnect()
+        return True
+    return False
+        
 
 dic_Devices_list= {}
 testResultFlag = True
@@ -137,6 +162,11 @@ for device in dic_Devices_list.items():
 
 for device in dic_Devices_list.items():
     ConfigureInterface(device,dic_device_credentials)    
+for device in dic_Devices_list.items():
+    if SetVlanInterface(device, dic_device_credentials):
+        print("Subinterface is configured on {}".format(device[0]))
+    else:
+        print("Error configuring {} or {} is not a router".format(device[0]))
 
 
 
