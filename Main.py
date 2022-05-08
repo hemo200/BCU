@@ -164,9 +164,9 @@ for device in dic_Devices_list.items():
     ConfigureInterface(device,dic_device_credentials)    
 for device in dic_Devices_list.items():
     if SetVlanInterface(device, dic_device_credentials):
-        print("Subinterface is configured on {}".format(device[0]))
+        print("Subinterface is configured on {0}".format(device[0]))
     else:
-        print("Error configuring {} or {} is not a router".format(device[0]))
+        print("Error configuring {0} or {0} is not a router".format(device[0]))
 
 
 
