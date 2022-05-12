@@ -116,57 +116,63 @@ def SetVlanInterface (deviceInstance,connectionInstance):
         connection.send_config_set(InterfaceCommnadList)
         connection.disconnect()
         return True
-    return False
-        
+    return False    
+      
+    
+def main(): 
+    dic_Devices_list= {}
+    testResultFlag = True
+    mainMenuOption = 0    
+    dic_Devices_list = loadDevices('list_of_device.csv')    
 
-dic_Devices_list= {}
-testResultFlag = True
-mainMenuOption = 0    
-dic_Devices_list = loadDevices('list_of_device.csv')    
+    dic_device_credentials = { 
+        "device_type": "cisco_ios",
+        "username" : "LocalAdmin",
+        "password" : "Cisco123"
+    }
+    #Script welcome page
 
-dic_device_credentials = { 
-    "device_type": "cisco_ios",
-    "username" : "LocalAdmin",
-    "password" : "Cisco123"
-}
-#Script welcome page
-print ("Welcome to BCU network configurator\n\n")
+    print ("Welcome to BCU network configurator\n\n")
 
-#loading the device from a file to a dictionary
-print("Loading devices")
-dic_Devices_list = loadDevices("list_of_device.csv")
+    #loading the device from a file to a dictionary
+    print("Loading devices")
+    dic_Devices_list = loadDevices("list_of_device.csv")
 
-#testing connectivity and ability across all devices.
-print("Looping through All Devices")
-for device in dic_Devices_list.items():  
-    dic_device_credentials["host"] = device[1]
+    #testing connectivity and ability across all devices.
+    print("Looping through All Devices")
+    for device in dic_Devices_list.items():  
+        dic_device_credentials["host"] = device[1]
+        if (testResultFlag == True):
+            testResultFlag = ConnectionTester(device, dic_device_credentials)
+        else:
+            ConnectionTester(device, dic_device_credentials)
+    #Display a confirmation message of testing all devices.
     if (testResultFlag == True):
-        testResultFlag = ConnectionTester(device, dic_device_credentials)
+        print(Fore.GREEN+"All devices are reachable and configureable"+Fore.RESET)
     else:
-        ConnectionTester(device, dic_device_credentials)
-#Display a confirmation message of testing all devices.
-if (testResultFlag == True):
-    print(Fore.GREEN+"All devices are reachable and configureable"+Fore.RESET)
-else:
-    print(Fore.RED+
-    "One of more devices are not reachable and configureable. Please check the above"+
-    " error messages."+Fore.RESET)
-#Configuring VLAN on all switches
-print("Configuring vlans on switches:")
-for device in dic_Devices_list.items(): 
-    if (configureVLAN(dic_device_credentials,device) == True):#Confirmation from switch
-        print("The Vlans are added to {}".format(device[0]))
-    else:
-        print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])
-        + Fore.RESET)
+        print(Fore.RED+
+        "One of more devices are not reachable and configureable. Please check the above"+
+        " error messages."+Fore.RESET)
+    #Configuring VLAN on all switches
+    print("Configuring vlans on switches:")
+    for device in dic_Devices_list.items(): 
+        if (configureVLAN(dic_device_credentials,device) == True):#Confirmation from switch
+            print("The Vlans are added to {}".format(device[0]))
+        else:
+            print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])
+            + Fore.RESET)
 
-for device in dic_Devices_list.items():
-    ConfigureInterface(device,dic_device_credentials)    
-for device in dic_Devices_list.items():
-    if SetVlanInterface(device, dic_device_credentials):
-        print("Subinterface is configured on {0}".format(device[0]))
-    else:
-        print("Error configuring {0} or {0} is not a router".format(device[0]))
+    for device in dic_Devices_list.items():
+        ConfigureInterface(device,dic_device_credentials)    
+    for device in dic_Devices_list.items():
+        if SetVlanInterface(device, dic_device_credentials):
+            print("Subinterface is configured on {0}".format(device[0]))
+        else:
+            print("Error configuring {0} or {0} is not a router".format(device[0]))
+if __name__ == "__main__":
+    main()
+else :
+    print("Please run this script withot import")
 
 
 
