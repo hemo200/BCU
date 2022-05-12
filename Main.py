@@ -18,7 +18,7 @@ def loadVlans(deviceName):
             dic_vlan = {vlan[1]:vlan[0] for vlan in reader}
         return dic_vlan
     else:
-        print("{} is not a switch".format(deviceName))
+        return False
 
 def configureVLAN(Connection,deviceInstance):
     dicVlanList = []
@@ -77,10 +77,10 @@ def ConfigureInterface(deviceInstance, connectionInstance):
             config_commands.append(vlanList)
 
         connection.send_config_set(config_commands)
-        print("VLANs are added to trunk ports in {0}".format(device[1]))
         connection.disconnect()
+        return True
     except:
-        print(Fore.RED + "Error loading trunk.csv file" + Fore.RESET)
+        return False
 
 def ConfigureNTP (deviceInstance,connectionInstance):
     connectionInstance["host"] = deviceInstance[1]
@@ -96,7 +96,6 @@ def SetVlanInterface (deviceInstance,connectionInstance):
             reader = csv.reader(vlanNum)
             for item in reader:
                dict_vlans.append(item[1]) 
-        print(deviceInstance[0][0:2])
         InterfaceCommnadList = []
         for vlnum in dict_vlans:
             if deviceInstance[0][0:2] == "CS":
@@ -111,8 +110,6 @@ def SetVlanInterface (deviceInstance,connectionInstance):
                 InterfaceCommnadList.append("ip address 10.2."+ vlnum[1:3] + ".1 255.255.255.0")
             else:
                 InterfaceCommnadList.append("ip address 10.3."+ vlnum[1:3] + ".1 255.255.255.0")
-        for item in InterfaceCommnadList:
-            print(item)
         connection.send_config_set(InterfaceCommnadList)
         connection.disconnect()
         return True
@@ -148,7 +145,8 @@ def main():
             ConnectionTester(device, dic_device_credentials)
     #Display a confirmation message of testing all devices.
     if (testResultFlag == True):
-        print(Fore.GREEN+"All devices are reachable and configureable"+Fore.RESET)
+        print(Fore.GREEN+"All devices are reachable and configureable"
+        +Fore.RESET)
     else:
         print(Fore.RED+
         "One of more devices are not reachable and configureable. Please check the above"+
@@ -157,22 +155,29 @@ def main():
     print("Configuring vlans on switches:")
     for device in dic_Devices_list.items(): 
         if (configureVLAN(dic_device_credentials,device) == True):#Confirmation from switch
-            print("The Vlans are added to {}".format(device[0]))
+            print(Fore.GREEN + "The Vlans are added to {}".format(device[0])+
+            Fore.RESET)
         else:
-            print(Fore.RED+"Vlans cannot be added to {0} or {0} is not a switch".format(device[0])
-            + Fore.RESET)
+            print(Fore.RED + "Vlans cannot be added to {0} or {0} is not a switch"
+            .format(device[0]) + Fore.RESET)
 
     for device in dic_Devices_list.items():
-        ConfigureInterface(device,dic_device_credentials)    
+        if ConfigureInterface(device,dic_device_credentials):
+            print("Interfaces were successfully configure on {0}".format(device[0]))
+        else:
+            print(Fore.RED + "Error configuring trunk interfaces on {0} or {0} is not a switch"
+            .format(device[0])+Fore.RESET) 
     for device in dic_Devices_list.items():
         if SetVlanInterface(device, dic_device_credentials):
-            print("Subinterface is configured on {0}".format(device[0]))
+            print(Fore.GREEN+"Subinterface is configured on {0}"
+            .format(device[0])+Fore.RESET)
         else:
-            print("Error configuring {0} or {0} is not a router".format(device[0]))
+            print(Fore.RED+"Error configuring {0} or {0} is not a router"
+            .format(device[0])+Fore.RESET)
 if __name__ == "__main__":
     main()
 else :
-    print("Please run this script withot import")
+    print("Please run this script without import")
 
 
 
