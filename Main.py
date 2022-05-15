@@ -163,7 +163,7 @@ def main():
 
     for device in dic_Devices_list.items():
         if ConfigureInterface(device,dic_device_credentials):
-            print("Interfaces were successfully configure on {0}".format(device[0]))
+            print(Fore.RED + "Interfaces were successfully configured on {0}".format(device[0])+ Fore.RESET)
         else:
             print(Fore.RED + "Error configuring trunk interfaces on {0} or {0} is not a switch"
             .format(device[0])+Fore.RESET) 
